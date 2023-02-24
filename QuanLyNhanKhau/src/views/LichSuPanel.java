@@ -29,16 +29,7 @@ public class LichSuPanel extends javax.swing.JPanel {
         setLayout(null);
         add(tablePanel);
         controller = new LichSuController(tablePanel, jtfSearch);
-        jtfSearch = new javax.swing.JTextField();
-        jtfSearch.setBounds(77, 34, 166, 30);
-        add(jtfSearch);
         
-                jtfSearch.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-                jtfSearch.addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        jtfSearchActionPerformed(evt);
-                    }
-                });
         controller.setParentJFrame(parentJFrame);
         controller.setDataTable();
     }
@@ -66,6 +57,16 @@ public class LichSuPanel extends javax.swing.JPanel {
         		.addGap(0, 340, Short.MAX_VALUE)
         );
         tablePanel.setLayout(tablePanelLayout);
+        jtfSearch = new javax.swing.JTextField();
+        jtfSearch.setBounds(77, 34, 166, 30);
+        add(jtfSearch);
+        
+                jtfSearch.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+                jtfSearch.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        jtfSearchActionPerformed(evt);
+                    }
+                });
     }// </editor-fold>//GEN-END:initComponents
 
     private void jtfSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfSearchActionPerformed

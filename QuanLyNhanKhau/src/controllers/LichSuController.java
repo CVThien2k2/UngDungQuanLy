@@ -59,28 +59,28 @@ public class LichSuController {
     
     //
     public void initAction(){
-//        this.jtfSearch.getDocument().addDocumentListener(new DocumentListener() {
-//            @Override
-//            public void insertUpdate(DocumentEvent e) {
-//                String key = jtfSearch.getText();
-//                listNhanKhauBeans = nhanKhauService.search(key.trim());
-//                setDataTable();
-//            }
-//
-//            @Override
-//            public void removeUpdate(DocumentEvent e) {
-//                String key = jtfSearch.getText();
-//                listNhanKhauBeans = nhanKhauService.search(key.trim());
-//                setDataTable();
-//            }
-//
-//            @Override
-//            public void changedUpdate(DocumentEvent e) {
-//                String key = jtfSearch.getText();
-//                listNhanKhauBeans = nhanKhauService.search(key.trim());
-//                setDataTable();
-//            }
-//        });
+        this.jtfSearch.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String key = jtfSearch.getText();
+                lichsumodel = lichsuservices.getList(key.trim());
+                setDataTable();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                String key = jtfSearch.getText();
+                lichsumodel = lichsuservices.getList(key.trim());
+                setDataTable();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                String key = jtfSearch.getText();
+                lichsumodel = lichsuservices.getList(key.trim());
+                setDataTable();
+            }
+        });
     }
     
     public static void setDataTable() {

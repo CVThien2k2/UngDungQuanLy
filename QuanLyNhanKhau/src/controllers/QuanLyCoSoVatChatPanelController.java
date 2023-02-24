@@ -109,26 +109,73 @@ public class QuanLyCoSoVatChatPanelController {
 //                JOptionPane.showConfirmDialog(null, table.getSelectedRow());
 				if (e.getClickCount() > 1) {
 					CoSoVatChatModel csvc = listcosovatchat.get(table.getSelectedRow());
-					int n = JOptionPane.showConfirmDialog(null, "Bạn muốn thay đổi số lượng?", "Có đúng không",
-							JOptionPane.YES_NO_OPTION);
-					if (n == JOptionPane.YES_OPTION) {
-						try {
-							String m = JOptionPane.showInputDialog("Nhập lại số lượng của nó");
-							if(m != null) {
-								int a = Integer.parseInt(m);
-								if(cosovatchatservices.update(a,csvc.getID())) {
+					Object[] options = { "Sửa Tên","Sửa Số Lượng","Sửa Số lượng hỏng", "CANCEL" };
+					
+					int x = JOptionPane.showOptionDialog(null, "Click OK to continue", "Lựa Chọn",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+					null, options, options[3]);
+					if(x==0) {
+						String m = JOptionPane.showInputDialog("Nhập lại tên của nó");
+						if (m != null) {
+								if (cosovatchatservices.updateten(csvc.getID(),m)) {
 									JOptionPane.showMessageDialog(null, "Cập nhật thành công");
 									refreshData();
 								} else {
 									JOptionPane.showMessageDialog(null, "Thất bại");
 								}
-							}
 							
+						}
+					}
+//					if(x==2) {
+//						String m = JOptionPane.showInputDialog("Nhập lại giá của nó");
+//						if (m != null) {
+//								if (cosovatchatservices.updategia(csvc.getID(),m)) {
+//									JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+//									refreshData();
+//								} else {
+//									JOptionPane.showMessageDialog(null, "Thất bại");
+//								}
+//							
+//						}
+//					}
+					if(x==2) {
+						String m = JOptionPane.showInputDialog("Nhập lại số đồ hỏng của nó");
+						if (m != null) {
+								if (cosovatchatservices.updatedohong(csvc.getSoluongconlai(),csvc.getSoluongdohong(),csvc.getID(),m)) {
+									JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+									refreshData();
+								} else {
+									JOptionPane.showMessageDialog(null, "Thất bại");
+								}
+							
+						}
+					}
+				
+					if (x == 1) {
+
+						try {
+							String m = JOptionPane.showInputDialog("Nhập lại số lượng của nó");
+
+							if (m != null) {
+								int a = Integer.parseInt(m);
+								if (csvc.getSoluong() - a > csvc.getSoluongconlai()) {
+									JOptionPane.showMessageDialog(null,
+											"Không thể cập nhật do có số lượng chưa trả hết!");
+								} else {
+									a = Integer.parseInt(m);
+									if (cosovatchatservices.update(a,csvc.getSoluongconlai()-(csvc.getSoluong() - a), csvc.getID())) {
+										JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+										refreshData();
+									} else {
+										JOptionPane.showMessageDialog(null, "Thất bại");
+									}
+								}
+							}
+
 						} catch (Exception e2) {
 							JOptionPane.showMessageDialog(null, "Nhập lại bằng số");
 						}
-						 
-						 
+
 					}
 				}
 			}

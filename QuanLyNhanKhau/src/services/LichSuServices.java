@@ -63,6 +63,52 @@ public class LichSuServices {
 		}
 		return list;
 	}
+	public List<LichSuModel> getList(String key) {
+
+		List<LichSuModel> list = new ArrayList<>();
+
+		try {
+			Connection connection = MysqlConnection.getMysqlConnection();
+			String query = "SELECT * from nhan_khau, hoat_dong where nhan_khau.ID = hoat_dong.IDNK and nhan_khau.hoTen like '%"+key+"%'";
+			PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(query);
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				LichSuModel ls = new LichSuModel();
+				NhanKhauModel nhanKhau = new NhanKhauModel();
+				HoatDongModel hd = new HoatDongModel();
+				nhanKhau.setID(rs.getInt("ID"));
+				nhanKhau.setBietDanh(rs.getString("bietDanh"));
+				nhanKhau.setHoTen(rs.getString("hoTen"));
+				nhanKhau.setGioiTinh(rs.getString("gioiTinh"));
+				
+				nhanKhau.setNamSinh(rs.getDate("namSinh"));
+				nhanKhau.setNguyenQuan(rs.getString("nguyenQuan"));
+				nhanKhau.setTonGiao(rs.getString("tonGiao"));
+				nhanKhau.setDanToc(rs.getString("danToc"));
+				nhanKhau.setQuocTich(rs.getString("quocTich"));
+				nhanKhau.setSoHoChieu(rs.getString("soHoChieu"));
+				nhanKhau.setNoiThuongTru(rs.getString("noiThuongTru"));
+				nhanKhau.setDiaChiHienNay(rs.getString("diaChiHienNay"));
+				hd.setID(rs.getInt("ma_hd"));
+				hd.setTenhoatdong(rs.getString("ten_hd"));
+				hd.setIDNK(rs.getInt("IDNK"));
+				hd.setThoigianbatdau(rs.getDate("thoi_gian_bat_dau"));
+				hd.setThoigianketthuc(rs.getDate("thoi_gian_ket_thuc"));
+				hd.setDongia(rs.getInt("don_gia"));
+				hd.setTrangthai(rs.getString("trang_thai"));
+
+				ls.setHd(hd);
+				ls.setNk(nhanKhau);
+				list.add(ls);
+			}
+			preparedStatement.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return list;
+	}
+
 
 	public List<CoSoVatChatThue> getListThue(int id) {
 		// TODO Auto-generated method stub

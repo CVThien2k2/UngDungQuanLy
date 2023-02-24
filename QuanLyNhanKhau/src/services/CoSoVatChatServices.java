@@ -81,19 +81,19 @@ public class CoSoVatChatServices {
 		return list;
 	}
 
-	public boolean addCoSoVatChat(String ten,int soluong, int dongia) {
+	public boolean addCoSoVatChat(String ten, int soluong, int dongia) {
 		String sql = "Insert into co_so_vat_chat(ten,so_luong,so_luong_con_lai,so_luong_do_hong,don_gia) values(?,?,?,0,?)";
 
 		try {
-			
+
 			Connection connection = MysqlConnection.getMysqlConnection();
 			PreparedStatement prst = connection.prepareStatement(sql);
-            prst.setString(1, ten);
-            prst.setInt(2, soluong);
-            prst.setInt(3, soluong);
-            prst.setInt(4, dongia);
-            prst.execute();
-            prst.close();
+			prst.setString(1, ten);
+			prst.setInt(2, soluong);
+			prst.setInt(3, soluong);
+			prst.setInt(4, dongia);
+			prst.execute();
+			prst.close();
 //			preparedStatement.executeUpdate();
 //			preparedStatement.close();
 			connection.close();
@@ -175,8 +175,7 @@ public class CoSoVatChatServices {
 		return name;
 	}
 
-	public boolean addHoatDong(HoatDongModel hoatdong, List<CoSoVatChatThue> list, String cmt)
-			{
+	public boolean addHoatDong(HoatDongModel hoatdong, List<CoSoVatChatThue> list, String cmt) {
 		int IDNK;
 		Connection connection;
 		try {
@@ -193,7 +192,8 @@ public class CoSoVatChatServices {
 				// 1 - 19
 				query = "INSERT INTO hoat_dong (ten_hd,thoi_gian_bat_dau,thoi_gian_ket_thuc,IDNK,don_gia,trang_thai)"
 						+ " values ( ?, ?, ?, ?,?,?)";
-				PreparedStatement preparedStatement1 = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+				PreparedStatement preparedStatement1 = connection.prepareStatement(query,
+						Statement.RETURN_GENERATED_KEYS);
 				preparedStatement1.setString(1, hoatdong.getTenhoatdong());
 
 				java.sql.Date tgbatdau = new java.sql.Date(hoatdong.getThoigianbatdau().getTime());
@@ -207,14 +207,13 @@ public class CoSoVatChatServices {
 				ResultSet rs1 = preparedStatement1.getGeneratedKeys();
 				if (rs1.next()) {
 					int hdID = rs1.getInt(1);
-					String sql = "INSERT INTO hoat_dong_csvc(ma_csvc,ma_hd, so_luong_thue)"
-							+ " values (?, ?,?)";
+					String sql = "INSERT INTO hoat_dong_csvc(ma_csvc,ma_hd, so_luong_thue)" + " values (?, ?,?)";
 					PreparedStatement prst = connection.prepareStatement(sql);
 					list.forEach(cosovatchatthue -> {
 						CoSoVatChatModel md = cosovatchatthue.getCosovatchatmodel();
 						int soluong = cosovatchatthue.getSoluong();
 						try {
-							
+
 							prst.setInt(1, md.getID());
 							prst.setInt(2, hdID);
 							prst.setInt(3, soluong);
@@ -225,28 +224,27 @@ public class CoSoVatChatServices {
 						}
 
 					});
-					
+
 					prst.close();
 					String sql2 = "UPDATE co_so_vat_chat SET so_luong_con_lai = ? Where ma_csvc = ?";
 					PreparedStatement prst1 = connection.prepareStatement(sql2);
 					list.forEach(cosovatchatthue -> {
 						CoSoVatChatModel md = cosovatchatthue.getCosovatchatmodel();
-						int soluong =md.getSoluongconlai() - cosovatchatthue.getSoluong();
+						int soluong = md.getSoluongconlai() - cosovatchatthue.getSoluong();
 						try {
-							
-							prst1.setInt(1,md.getSoluongconlai());
+
+							prst1.setInt(1, md.getSoluongconlai());
 							prst1.setInt(2, md.getID());
 							prst1.execute();
-							
+
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 
 					});
-					
-					prst1.close();
 
+					prst1.close();
 
 				}
 				preparedStatement1.close();
@@ -256,33 +254,97 @@ public class CoSoVatChatServices {
 			// TODO Auto-generated catch block
 			return false;
 		}
-		
-		
-		
-		
+
 		return true;
 	}
 
-	public boolean update(int n,int ma) {
+	public boolean update(int n, int slcl, int ma) {
 		// TODO Auto-generated method stub
-		String sql = "Update co_so_vat_chat Set so_luong = ? where ma_csvc = ?";
+
+		String sql = "Update co_so_vat_chat Set so_luong = ?,so_luong_con_lai = ? where ma_csvc = ?";
 
 		try {
-			
+
 			Connection connection = MysqlConnection.getMysqlConnection();
 			PreparedStatement prst = connection.prepareStatement(sql);
-            prst.setInt(1, n);
-            prst.setInt(2, ma);
-            
-            prst.execute();
-            prst.close();
+			prst.setInt(1, n);
+			prst.setInt(2, slcl);
+			prst.setInt(3, ma);
+
+			prst.execute();
+			prst.close();
 			connection.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
 		}
 		return true;
-		
+
+	}
+
+	public boolean updateten(int id,String m) {
+		String sql = "Update co_so_vat_chat Set ten = ? where ma_csvc = ?";
+
+		try {
+
+			Connection connection = MysqlConnection.getMysqlConnection();
+			PreparedStatement prst = connection.prepareStatement(sql);
+			prst.setString(1, m);
+			prst.setInt(2, id);
+
+			prst.execute();
+			prst.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+	public boolean updategia(int id,String m) {
+		String sql = "Update co_so_vat_chat Set don_gia = ? where ma_csvc = ?";
+
+		try {
+
+			Connection connection = MysqlConnection.getMysqlConnection();
+			PreparedStatement prst = connection.prepareStatement(sql);
+			prst.setString(1, m);
+			prst.setInt(2, id);
+
+			prst.execute();
+			prst.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+	public boolean updatedohong(int conlai,int dohong,int id,String m) {
+		String sql = "Update co_so_vat_chat Set so_luong_do_hong = ?,so_luong_con_lai = ? where ma_csvc = ?";
+
+		try {
+			int a = Integer.parseInt(m);
+			if(a > conlai) {
+				return false;
+			}
+			int b = conlai - a;
+			int c = dohong + a;
+
+			Connection connection = MysqlConnection.getMysqlConnection();
+			PreparedStatement prst = connection.prepareStatement(sql);
+			prst.setInt(1, c);
+			prst.setInt(2, b);
+			prst.setInt(3,id);
+
+			prst.execute();
+			prst.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		return true;
 	}
 
 }

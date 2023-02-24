@@ -90,6 +90,7 @@ public class DangKyPanel extends javax.swing.JPanel {
 		this.parentJFrame = parentFrame;
 		initComponents();
 	}
+
 	private void initComponents() {
 		setLayout(null);
 		cosovatchatservices = new CoSoVatChatServices();
@@ -128,7 +129,7 @@ public class DangKyPanel extends javax.swing.JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 				String cmt = textField_1.getText();
-				if(CheckCmt()) {
+				if (CheckCmt()) {
 					String name = cosovatchatservices.getname(cmt);
 					if (name != null) {
 						setText(name);
@@ -137,8 +138,7 @@ public class DangKyPanel extends javax.swing.JPanel {
 						JOptionPane.showMessageDialog(null, "Số CMT khoong đúng");
 					}
 				}
-				
-				
+
 			}
 		});
 		btnNewButton_1.setIcon(new ImageIcon(DangKyPanel.class.getResource("/Icons/checked.png")));
@@ -187,10 +187,10 @@ public class DangKyPanel extends javax.swing.JPanel {
 		dateChooser.setEnabled(false);
 		panel_1.add(dateChooser);
 
-		JLabel lblNewLabel_4 = new JLabel("Thời gian bắt đầu");
+		JLabel lblNewLabel_4 = new JLabel("Thời gian kết thúc");
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_4.setFont(new Font("Tahoma", Font.ITALIC, 15));
-		lblNewLabel_4.setBounds(10, 84, 119, 19);
+		lblNewLabel_4.setBounds(0, 84, 129, 19);
 		panel_1.add(lblNewLabel_4);
 
 		dateChooser_1 = new JDateChooser();
@@ -232,38 +232,41 @@ public class DangKyPanel extends javax.swing.JPanel {
 		btnNewButton = new JButton("Lưu");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (CheckEmpty()) {
-					HoatDongModel hd = new HoatDongModel();
-					hd.setTenhoatdong(textField_2.getText().trim());
-					hd.setThoigianbatdau(dateChooser.getDate());
-					hd.setThoigianketthuc(dateChooser_1.getDate());
-					hd.setDongia(Integer.parseInt(textField_3.getText()));
-					
+				int n = JOptionPane.showConfirmDialog(null, "Bạn muốn đăng ký cho người này?", "Có đúng không",
+						JOptionPane.YES_NO_OPTION);
+				if (n == JOptionPane.YES_OPTION) {
+					if (CheckEmpty()) {
+						HoatDongModel hd = new HoatDongModel();
+						hd.setTenhoatdong(textField_2.getText().trim());
+						hd.setThoigianbatdau(dateChooser.getDate());
+						hd.setThoigianketthuc(dateChooser_1.getDate());
+						hd.setDongia(Integer.parseInt(textField_3.getText()));
+
 						try {
-							if( cosovatchatservices.addHoatDong(hd, listthue, textField_1.getText())){
-								JOptionPane.showMessageDialog(null, "them thanh cong");
+							if (cosovatchatservices.addHoatDong(hd, listthue, textField_1.getText())) {
+								JOptionPane.showMessageDialog(null, "Thêm thành công");
 								removeAll();
 								initComponents();
 								validate();
-							    repaint();
+								repaint();
 							}
-							
-						} catch (HeadlessException e1) {
-							
-						}
-					
 
+						} catch (HeadlessException e1) {
+
+						}
+
+					}
 				}
 			}
 		});
 		btnNewButton.setBackground(new Color(255, 255, 255));
 		btnNewButton.setBounds(414, 373, 49, 20);
 		panel_1.add(btnNewButton);
-		
+
 		JLabel lblNewLabel_7 = new JLabel("đ");
 		lblNewLabel_7.setBounds(860, 357, 23, 20);
 		panel_1.add(lblNewLabel_7);
-	
+
 		setBackground(new java.awt.Color(255, 255, 255));
 
 	}// </editor-fold>//GEN-END:initComponents
@@ -304,7 +307,7 @@ public class DangKyPanel extends javax.swing.JPanel {
 				if (e.getClickCount() > 1) {
 					CoSoVatChatModel csvc = listcosovatchat.get(table.getSelectedRow());
 
-					String m = JOptionPane.showInputDialog("Nhập số lượng ( nhỏ hơn " + csvc.getSoluongconlai());
+					String m = JOptionPane.showInputDialog("Nhập số lượng ( nhỏ hơn " + csvc.getSoluongconlai() + ")");
 
 					if (m != null) {
 						int sl = Integer.parseInt(m);
@@ -335,7 +338,7 @@ public class DangKyPanel extends javax.swing.JPanel {
 								Money += cosovatchat.getThanhtien();
 
 							});
-							textField_3.setText(Money+"");
+							textField_3.setText(Money + "");
 
 							setDataTable();
 							setDataTablethue();
@@ -400,44 +403,52 @@ public class DangKyPanel extends javax.swing.JPanel {
 							if (cosovatchat.getTenCoSoVatChat().equals(n.getTenCoSoVatChat())) {
 								cosovatchat.setSoluongconlai(cosovatchat.getSoluongconlai() + temp.getSoluong());
 							}
+							setDataTable();
+							setDataTablethue();
 
 						});
 					}
 					if (x == 1) {
-						String m = JOptionPane.showInputDialog("Nhập số lượng muốn mua ( nhỏ hơn " + temp.getSoluong());
-						int sl = Integer.parseInt(m);
-						if (sl <= 0) {
-							listthue.remove(listthue.get(table.getSelectedRow()));
-							listcosovatchat.forEach(cosovatchat -> {
-								if (cosovatchat.getTenCoSoVatChat().equals(n.getTenCoSoVatChat())) {
-									cosovatchat.setSoluongconlai(cosovatchat.getSoluongconlai() + temp.getSoluong());
-								}
-
-							});
-						} else {
-							if (sl > 20) {
-								JOptionPane.showMessageDialog(null, "Không được nhập quá số lượng chỉ định");
-							} else {
+						String m = JOptionPane
+								.showInputDialog("Nhập số lượng muốn mua ( nhỏ hơn " + temp.getSoluong() + ")");
+						if (m != null) {
+							int sl = Integer.parseInt(m);
+							if (sl <= 0) {
+								listthue.remove(listthue.get(table.getSelectedRow()));
 								listcosovatchat.forEach(cosovatchat -> {
 									if (cosovatchat.getTenCoSoVatChat().equals(n.getTenCoSoVatChat())) {
-										cosovatchat.setSoluongconlai(
-												cosovatchat.getSoluongconlai() + temp.getSoluong() - sl);
+										cosovatchat
+												.setSoluongconlai(cosovatchat.getSoluongconlai() + temp.getSoluong());
 									}
+									setDataTable();
+									setDataTablethue();
 
 								});
-								temp.setSoluong(sl);
+							} else {
+								if (sl > 20) {
+									JOptionPane.showMessageDialog(null, "Không được nhập quá số lượng chỉ định");
+								} else {
+									listcosovatchat.forEach(cosovatchat -> {
+										if (cosovatchat.getTenCoSoVatChat().equals(n.getTenCoSoVatChat())) {
+											cosovatchat.setSoluongconlai(
+													cosovatchat.getSoluongconlai() + temp.getSoluong() - sl);
+										}
+
+									});
+									temp.setSoluong(sl);
+								}
 							}
 						}
+						listthue.forEach(cosovatchat -> {
+
+							Money += cosovatchat.getThanhtien();
+
+						});
+						textField_3.setText(Money + "");
+
+						setDataTable();
+						setDataTablethue();
 					}
-					listthue.forEach(cosovatchat -> {
-
-						Money += cosovatchat.getThanhtien();
-
-					});
-					textField_3.setText(Money+"");
-
-					setDataTable();
-					setDataTablethue();
 				}
 			}
 		});
@@ -470,23 +481,27 @@ public class DangKyPanel extends javax.swing.JPanel {
 		}
 		return true;
 	}
+
 	public boolean CheckCmt() {
-		if(textField_1.getText().trim().isEmpty()) {
-			  JOptionPane.showMessageDialog(null, "Vui lòng nhập đúng định dạng CMT", "Warning", JOptionPane.WARNING_MESSAGE);
-		        return false;
+		if (textField_1.getText().trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập đúng định dạng CMT", "Warning",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
 		}
 		try {
-            long d = Long.parseLong(textField_1.getText());
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Số CMT không thể chứa các ký tự", "Warning", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
-    // kiem tra do dai cmt
-    if (textField_1.getText().length() != 9 && textField_1.getText().length() != 12) {
-        JOptionPane.showMessageDialog(null, "Vui lòng nhập đúng định dạng CMT", "Warning", JOptionPane.WARNING_MESSAGE);
-        return false;
-    }
-    return true;
+			long d = Long.parseLong(textField_1.getText());
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Số CMT không thể chứa các ký tự", "Warning",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		// kiem tra do dai cmt
+		if (textField_1.getText().length() != 9 && textField_1.getText().length() != 12) {
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập đúng định dạng CMT", "Warning",
+					JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		return true;
 	}
-	
+
 }
